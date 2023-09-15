@@ -2,6 +2,9 @@
 if(CONFIG_CALENDAR)
 zephyr_library()
 
+list(APPEND SYSCALL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(SYSCALL_INCLUDE_DIRS ${SYSCALL_INCLUDE_DIRS} PARENT_SCOPE)
+
 zephyr_include_directories(include)
 zephyr_library_sources_ifdef(CONFIG_STM32_RTC_CALENDAR drivers/stm32/stm32_rtc_cal.c)
 zephyr_library_sources_ifdef(CONFIG_DS3231_RTC_CALENDAR drivers/ds3231/ds3231_cal.c)

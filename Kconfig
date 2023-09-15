@@ -3,7 +3,7 @@
 
 menuconfig CALENDAR
 	bool "Enable the calendar API"
-	select CONFIG_APPLICATION_DEFINED_SYSCALL
+	#select CONFIG_APPLICATION_DEFINED_SYSCALL
 	help
 	  Enable calendar api
 

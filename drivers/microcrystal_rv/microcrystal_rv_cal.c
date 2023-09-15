@@ -159,6 +159,8 @@ static int rv_calendar_gettime(const struct device * dev, struct tm * tm) {
 	return rc;
 }
 
+#ifdef CONFIG_MICROCRYSTAL_RTC_RV3032
+
 /**
  * @brief Helper function to check the SRAM contents.
  * Useful to check if the RTC lost power, so that it can
@@ -185,6 +187,8 @@ static int set_sram_contents(const struct device * dev, uint8_t data){
 	return rv_write(dev, offsetof(rv_regmap_t, magic), (uint8_t *)&data, member_size(rv_regmap_t, magic));
 }
 
+#endif
+
 /**
  * @brief Initialize calendar API.
  * 
@@ -205,8 +209,10 @@ static int rv_rtc_initilize(const struct device *dev) {
 		* We can check if it was already initialized by seeing if the magic word
 		* is present in the first sram register
 		*/
+        int rc = 0;
+        #ifdef CONFIG_MICROCRYSTAL_RTC_RV3032
 		uint8_t sram = 0;
-		int rc = get_sram_contents(dev, &sram);
+		rc = get_sram_contents(dev, &sram);
 		if(IS_ENABLED(CONFIG_RESET_BACKUP_DOMAIN) ||  (rc == 0 && sram != SRAM_MAGIC))
 		{
 			LOG_DBG("Reseting backup domain. SRAM contents=0x%02x\n", sram);
@@ -217,6 +223,8 @@ static int rv_rtc_initilize(const struct device *dev) {
 			rc = rv_calendar_settime(dev, t_init);
 			set_sram_contents(dev, SRAM_MAGIC);
 		}
+        #endif
+
 	return rc;
 }
 
